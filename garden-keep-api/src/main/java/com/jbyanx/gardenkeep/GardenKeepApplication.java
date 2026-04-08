@@ -1,4 +1,4 @@
-package com.jbyanx.garden_keep;
+package com.jbyanx.gardenkeep;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
