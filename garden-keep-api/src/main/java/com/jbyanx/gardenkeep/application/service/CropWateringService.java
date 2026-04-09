@@ -4,23 +4,35 @@ import com.jbyanx.gardenkeep.application.port.in.RecordWateringUseCase;
 import com.jbyanx.gardenkeep.application.port.out.CropRepositoryPort;
 import com.jbyanx.gardenkeep.domain.model.Crop;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j; // <-- ¡El Logger profesional!
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Slf4j // Lombok crea una variable 'log' automáticamente
 @RequiredArgsConstructor
 public class CropWateringService implements RecordWateringUseCase {
+
     private final CropRepositoryPort cropRepository;
 
     @Override
-    public void recordDeepWatering(UUID cropId) {
-        //buscamos el cultivo
+    public void waterCrop(UUID cropId, boolean isSoilDryAtSecondKnuckle) {
+
+        log.info("Iniciando proceso de riego para el cultivo con ID: {}", cropId);
+
         Crop crop = cropRepository.findById(cropId)
-                .orElseThrow(() -> new IllegalArgumentException("El cultivo con ID " + cropId + " no existe."));
+                .orElseThrow(() -> {
+                    log.error("Fallo al regar: No se encontró el cultivo ID {}", cropId);
+                    return new IllegalArgumentException("El cultivo con ID " + cropId + " no existe.");
+                });
 
-        //ejecutamos logica DEL DOMINIO
-        crop.performDeepWatering();
+        // La planta hace su validación biológica y actualiza su fecha interna
+        crop.waterPlant(isSoilDryAtSecondKnuckle, LocalDateTime.now());
 
-        //guardamos el nuevo estado
+        // Guardamos el nuevo estado (con la fecha actualizada) en la BD
         cropRepository.save(crop);
+
+        log.info("Riego registrado exitosamente en base de datos para el cultivo {}. Fase actual: {}",
+                cropId, crop.getCurrentStage());
     }
 }
