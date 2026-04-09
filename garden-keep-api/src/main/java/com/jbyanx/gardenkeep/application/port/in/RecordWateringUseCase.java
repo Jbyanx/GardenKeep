@@ -4,5 +4,5 @@ import java.util.UUID;
 
 public interface RecordWateringUseCase {
     // El caso de uso exacto que el usuario ejecutará desde la App Móvil
-    void recordDeepWatering(UUID cropId);
+    void waterCrop(UUID cropId, boolean isSoilDryAtSecondKnuckle);
 }

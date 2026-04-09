@@ -3,6 +3,7 @@ package com.jbyanx.gardenkeep.domain.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
@@ -12,26 +13,34 @@ public class Crop {
     private final UUID id;
     private final CropType type;
     private GrowthStage currentStage;
-
-    // Regla de negocio: El baño de sol es seguro después de las 3:30 PM
+    private LocalDateTime lastWateredAt;
     private static final LocalTime SAFE_SUN_TIME = LocalTime.of(15, 30);
 
-    // Comportamiento 1: ¿Necesita baño de sol sin quemarse?
     public boolean isSafeForSunBath(LocalTime currentTime) {
         return currentTime.isAfter(SAFE_SUN_TIME);
     }
 
-    // Comportamiento 2: Validar el tipo de riego
-    public void performDeepWatering() {
-        if (this.currentStage == GrowthStage.PHASE_1_SURFACE) {
-            // ¡Aquí protegemos la regla de negocio!
-            throw new IllegalStateException("No se puede hacer riego profundo en Fase 1. ¡Vas a pudrir el bulbo!");
+    // Le pasamos la hora exacta del riego para no depender de LocalDateTime.now() dentro de la entidad (hace el testing más fácil)
+    public void waterPlant(boolean isSoilDryAtSecondKnuckle, LocalDateTime wateringTime) {
+
+        if (!isSoilDryAtSecondKnuckle) {
+            throw new IllegalStateException("Peligro Botánico: La tierra aún está húmeda. Si riegas ahora, asfixiarás las raíces o pudrirás el bulbo.");
         }
-        // Lógica de riego profundo (ej. registrar la acción en una lista de eventos)
+
+        if (this.currentStage == GrowthStage.PHASE_1_SURFACE) {
+            // Lógica de éxito: Mutamos el estado
+            this.lastWateredAt = wateringTime;
+            // (En un futuro, aquí podríamos retornar un objeto "SurfaceWateringAction")
+            //o en esta fase va una cantidad de ml (ej 50ml)
+        } else if (this.currentStage == GrowthStage.PHASE_2_DEEP) {
+            // Lógica de éxito: Mutamos el estado
+            this.lastWateredAt = wateringTime;
+            // (En un futuro, aquí podríamos retornar un objeto "DeepWateringAction")
+            //cantidad de agua (500ml) o algo así
+        }
     }
 
     public void promoteToPhase2() {
         this.currentStage = GrowthStage.PHASE_2_DEEP;
     }
-
 }
