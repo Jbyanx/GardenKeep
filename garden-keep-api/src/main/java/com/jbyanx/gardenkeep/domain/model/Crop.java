@@ -1,5 +1,6 @@
 package com.jbyanx.gardenkeep.domain.model;
 
+import com.jbyanx.gardenkeep.domain.exception.BotanicalRuleViolationException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -24,7 +25,7 @@ public class Crop {
     public void waterPlant(boolean isSoilDryAtSecondKnuckle, LocalDateTime wateringTime) {
 
         if (!isSoilDryAtSecondKnuckle) {
-            throw new IllegalStateException("Peligro Botánico: La tierra aún está húmeda. Si riegas ahora, asfixiarás las raíces o pudrirás el bulbo.");
+            throw new BotanicalRuleViolationException("Peligro Botánico: La tierra aún está húmeda. Si riegas ahora, asfixiarás las raíces o pudrirás el bulbo.");
         }
 
         if (this.currentStage == GrowthStage.PHASE_1_SURFACE) {
