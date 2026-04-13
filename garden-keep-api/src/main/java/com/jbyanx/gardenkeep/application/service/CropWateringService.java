@@ -2,6 +2,7 @@ package com.jbyanx.gardenkeep.application.service;
 
 import com.jbyanx.gardenkeep.application.port.in.RecordWateringUseCase;
 import com.jbyanx.gardenkeep.application.port.out.CropRepositoryPort;
+import com.jbyanx.gardenkeep.domain.exception.CropNotFoundException;
 import com.jbyanx.gardenkeep.domain.model.Crop;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j; // <-- ¡El Logger profesional!
@@ -23,7 +24,7 @@ public class CropWateringService implements RecordWateringUseCase {
         Crop crop = cropRepository.findById(cropId)
                 .orElseThrow(() -> {
                     log.error("Fallo al regar: No se encontró el cultivo ID {}", cropId);
-                    return new IllegalArgumentException("El cultivo con ID " + cropId + " no existe.");
+                    return new CropNotFoundException("El cultivo con ID " + cropId + " no existe.");
                 });
 
         // La planta hace su validación biológica y actualiza su fecha interna
