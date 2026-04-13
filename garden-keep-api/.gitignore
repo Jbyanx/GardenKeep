@@ -1,3 +1,4 @@
+.env
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
@@ -14,9 +15,10 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
+.idea/
+*.iml
 .idea
 *.iws
-*.iml
 *.ipr
 
 ### NetBeans ###
