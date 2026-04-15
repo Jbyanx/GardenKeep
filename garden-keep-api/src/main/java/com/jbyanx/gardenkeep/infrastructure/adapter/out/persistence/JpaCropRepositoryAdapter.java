@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Component //para que spring lo maneje
 @RequiredArgsConstructor //para las dependencias (DI)
-public class PostgresCropRepositoryAdapter implements CropRepositoryPort {
+public class JpaCropRepositoryAdapter implements CropRepositoryPort {
     private final JpaCropRepository jpaRepository;
     private final CropPersistenceMapper mapper;
 
