@@ -1,8 +1,10 @@
 package com.jbyanx.gardenkeep.infrastructure.config;
 
+import com.jbyanx.gardenkeep.application.port.in.AddCropToPotUseCase;
 import com.jbyanx.gardenkeep.application.port.in.CreatePotUseCase;
 import com.jbyanx.gardenkeep.application.port.out.CropRepositoryPort;
 import com.jbyanx.gardenkeep.application.port.out.PotRepositoryPort;
+import com.jbyanx.gardenkeep.application.service.AddCropToPotService;
 import com.jbyanx.gardenkeep.application.service.CropWateringService;
 import com.jbyanx.gardenkeep.application.service.CreatePotService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,6 +13,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class BeanConfiguration {
+
+    @Bean
+    public AddCropToPotUseCase addCropToPotUseCase(PotRepositoryPort potRepositoryPort) {
+        return new AddCropToPotService(potRepositoryPort);
+    }
 
     //aca decidimos que adaptador de base de datos usamos, en este caso el de postgres
     @Bean

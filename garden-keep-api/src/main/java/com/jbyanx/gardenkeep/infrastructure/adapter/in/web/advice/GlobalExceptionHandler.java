@@ -2,6 +2,7 @@ package com.jbyanx.gardenkeep.infrastructure.adapter.in.web.advice;
 
 import com.jbyanx.gardenkeep.domain.exception.BotanicalRuleViolationException;
 import com.jbyanx.gardenkeep.domain.exception.CropNotFoundException;
+import com.jbyanx.gardenkeep.domain.exception.PotNotFoundException;
 import com.jbyanx.gardenkeep.infrastructure.adapter.in.web.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,16 @@ import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(PotNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePotNotFound(PotNotFoundException ex) {
+        ErrorResponse error = new ErrorResponse(
+                "POT_NOT_FOUND",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(CropNotFoundException.class) //cultivo no encontrado
     public ResponseEntity<ErrorResponse> handleNotFound(CropNotFoundException ex) {
