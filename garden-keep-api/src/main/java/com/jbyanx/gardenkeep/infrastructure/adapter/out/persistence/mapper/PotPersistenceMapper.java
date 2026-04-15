@@ -6,6 +6,7 @@ import com.jbyanx.gardenkeep.infrastructure.adapter.out.persistence.entity.PotEn
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -21,10 +22,8 @@ public class PotPersistenceMapper {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCrops() != null
-                        ? entity.getCrops().stream()
-                        .map(cropMapper::toDomain)
-                        .toList()
-                        : List.of()
+                        ? new ArrayList<>(entity.getCrops().stream().map(cropMapper::toDomain).toList()) // Envolvemos en ArrayList
+                        : new ArrayList<>() // Siempre devolver una lista mutable
         );
     }
 
