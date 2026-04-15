@@ -29,4 +29,8 @@ public class CropEntity {
 
     @Column(name = "last_watered_at")
     private LocalDateTime lastWateredAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pot_id", nullable = false)
+    private PotEntity pot;
 }
