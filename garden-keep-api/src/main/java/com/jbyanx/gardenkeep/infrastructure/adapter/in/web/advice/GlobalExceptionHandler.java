@@ -1,4 +1,4 @@
-package com.jbyanx.gardenkeep.infrastructure.adapter.in.web;
+package com.jbyanx.gardenkeep.infrastructure.adapter.in.web.advice;
 
 import com.jbyanx.gardenkeep.domain.exception.BotanicalRuleViolationException;
 import com.jbyanx.gardenkeep.domain.exception.CropNotFoundException;
