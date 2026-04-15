@@ -4,6 +4,7 @@ import com.jbyanx.gardenkeep.domain.exception.BotanicalRuleViolationException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
@@ -28,16 +29,24 @@ public class Crop {
             throw new BotanicalRuleViolationException("Peligro Botánico: La tierra aún está húmeda. Si riegas ahora, asfixiarás las raíces o pudrirás el bulbo.");
         }
 
+        // 🛑 NUEVA REGLA: Prevención de Riego Infinito (Cooldown)
+        if (this.lastWateredAt != null) {
+            long minutesSinceLastWatering = Duration.between(this.lastWateredAt, wateringTime).toMinutes();
+
+            // Para el MVP y pruebas rápidas, pondremos 5 minutos.
+            // En producción, esto debería ser al menos 12 o 24 horas (ej. toHours() < 12)
+            if (minutesSinceLastWatering < 5) {
+                throw new BotanicalRuleViolationException(
+                        "Peligro Botánico: El cultivo ya fue regado hace " + minutesSinceLastWatering +
+                                " minutos. Espera a que el sustrato drene correctamente."
+                );
+            }
+        }
+
         if (this.currentStage == GrowthStage.PHASE_1_SURFACE) {
-            // Lógica de éxito: Mutamos el estado
             this.lastWateredAt = wateringTime;
-            // (En un futuro, aquí podríamos retornar un objeto "SurfaceWateringAction")
-            //o en esta fase va una cantidad de ml (ej 50ml)
         } else if (this.currentStage == GrowthStage.PHASE_2_DEEP) {
-            // Lógica de éxito: Mutamos el estado
             this.lastWateredAt = wateringTime;
-            // (En un futuro, aquí podríamos retornar un objeto "DeepWateringAction")
-            //cantidad de agua (500ml) o algo así
         }
     }
 
