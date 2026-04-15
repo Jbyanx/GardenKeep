@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CropPersistenceMapper {
     public Crop toDomain(CropEntity entity) {
+        if(entity == null) return null;
         return new Crop(
                 entity.getId(),
                 entity.getType(),
@@ -15,11 +16,13 @@ public class CropPersistenceMapper {
         );
     }
     public CropEntity toEntity(Crop crop){
+        if(crop == null) return null;
         return new CropEntity(
                 crop.getId(),
                 crop.getType(),
                 crop.getCurrentStage(),
-                crop.getLastWateredAt()
+                crop.getLastWateredAt(),
+                null // La relación con PotEntity se maneja en PotPersistenceMapper
         );
     }
 }
